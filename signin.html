@@ -39,5 +39,38 @@
 
 
 <script type="module" src="./assets/js/auth.js"></script>
+    <script type="module">
+import { auth } from "./assets/js/auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Redirect logged-in users to home page
+onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    window.location.href = "index.html";
+  }
+});
+
+// Handle login button click
+const loginBtn = document.getElementById("loginBtn");
+
+loginBtn.addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    // Firebase sign in
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+
+    if (userCredential.user.emailVerified) {
+      window.location.href = "index.html";
+    } else {
+      alert("Please verify your email first!");
+    }
+  } catch (error) {
+    alert(error.message);
+  }
+});
+</script>
 </body>
+
 </html>
