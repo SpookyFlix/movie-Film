@@ -5,7 +5,6 @@ export const customVideos = {
   "653221": "https://drive.google.com/file/d/1wOZ3EMHMPd07GL5L2GRsy5knqmx5n9wl/preview", //Hridhyam malayalam
   "1186350": "https://drive.google.com/file/d/1F7qs3tHW8Xg1YnkcqRFP3uyPbvjlT8Uf/preview", //marco malayalam
   "1177224": "https://drive.google.com/file/d/1sAS0ApN2pZoBdLNqQdXvTQlEwh2tvt4_/preview", //Bougainvillea malayalam
-  "19995": "https://drive.google.com/file/d/1YSAGB4vt2K1Wq1HhhcU2uAeGR8IAcsMa/preview",// TESTING VIDEO
   "1153399": "https://drive.google.com/file/d/1CGAdojQPYFgaVEqaENboI3KqLhIxNZiJ/preview", //coolie tamil
   "1062722": "https://drive.google.com/file/d/1g1juuKpajxdq_Gpwx0MiO5VG91U47W0E/preview", //Frankenstein 2025
   "82702": "https://drive.google.com/file/d/19Al0G9u4Z4zJ1LNGWDwqXQ3ajG_2MhaS/preview",// how to train your dragon 2
@@ -20,6 +19,8 @@ export const customVideos = {
   "524047": "https://drive.google.com/file/d/1S0sQIlQgEsOOJhBaTC6qSvWJAxDh4DLd/preview",//greenland 2020
   "90307": "https://drive.google.com/file/d/1jKqo4UatO49Ma03WCGY40MpQe6JOS75x/preview",//GREENLAND 2
   "1242898": "https://drive.google.com/file/d/1o0HUimb2WkPaKdKFRzWb3-3jfuQ9l1dN/preview",//PREDATOR BADLAND
+  "345": "https://drive.google.com/file/d/1HzjeolT-lEVZqppcGSfm6JldquaO8Jss/preview",//eyes wide shut
+  "756780": "https://drive.google.com/file/d/1rYvDBKHhqPmHZ6114tPyVMG1TtTUSISl/preview",//oppenheimwr
 
   
 
@@ -42,6 +43,7 @@ export const customVideos = {
   
 
 };
+
 
 
 
