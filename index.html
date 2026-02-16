@@ -116,17 +116,19 @@
 
 
 <script type="module">
-import { auth } from "./js/auth.js";
+import { auth } from "./assets/js/auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 onAuthStateChanged(auth, (user) => {
-
+  // If the user is not logged in or email not verified, redirect to signin page
   if (!user || !user.emailVerified) {
     window.location.href = "signin.html";
   }
-
+  // Otherwise, stay on index.html (home page)
 });
 </script>
 
+
   </body>
 </html>
+
