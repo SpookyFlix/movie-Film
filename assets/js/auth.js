@@ -1,12 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import { 
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
 import { 
   getFirestore,
   doc,
@@ -14,9 +12,7 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-
-
-
+// -------------------- Firebase config --------------------
 const firebaseConfig = {
   apiKey: "AIzaSyDTsGa9by8bEsm7beKfwXOFmBLlZAF4NUQ",
   authDomain: "spooky-a6840.firebaseapp.com",
@@ -26,104 +22,107 @@ const firebaseConfig = {
   appId: "1:137766818461:web:5f091e46f6896a1197fa74"
 };
 
-
 const app = initializeApp(firebaseConfig);
-
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
+// -------------------- Allowed domains --------------------
+const allowedDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "microsoft.com"];
 
-// SIGN UP FUNCTION
+// -------------------- SIGN UP FUNCTION --------------------
 export async function signUp(email, password) {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  
-  await sendEmailVerification(userCredential.user);
-  await auth.signOut();
+  const domain = email.split("@")[1];
+  if (!allowedDomains.includes(domain)) {
+    alert("Only Gmail, Yahoo, Hotmail, Outlook, or Microsoft emails are allowed!");
+    return;
+  }
 
-
-  alert("Verification email sent. Please check your inbox.");
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await sendEmailVerification(userCredential.user);
+    await auth.signOut();
+    alert("Verification email sent. Please check your inbox.");
+  } catch (error) {
+    alert(error.message);
+  }
 }
 
-// HANDLE SIGNUP FORM
+// -------------------- HANDLE SIGNUP FORM --------------------
 document.addEventListener("DOMContentLoaded", () => {
-
   const signupBtn = document.getElementById("signupBtn");
 
   if (signupBtn) {
     signupBtn.addEventListener("click", async () => {
-
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+
+      const domain = email.split("@")[1];
+      if (!allowedDomains.includes(domain)) {
+        alert("Only Gmail, Yahoo, Hotmail, Outlook, or Microsoft emails are allowed!");
+        return;
+      }
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await sendEmailVerification(userCredential.user);
-
         alert("Verification email sent. Please check your inbox.");
-
       } catch (error) {
         alert(error.message);
       }
-
     });
   }
-
 });
 
-// HANDLE LOGIN
+// -------------------- HANDLE LOGIN --------------------
 document.addEventListener("DOMContentLoaded", () => {
-
   const loginBtn = document.getElementById("loginBtn");
 
   if (loginBtn) {
     loginBtn.addEventListener("click", async () => {
-
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
+      const domain = email.split("@")[1];
+      if (!allowedDomains.includes(domain)) {
+        alert("Only Gmail, Yahoo, Hotmail, Outlook, or Microsoft emails are allowed!");
+        return;
+      }
+
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
         await userCredential.user.reload();
+
         if (!userCredential.user.emailVerified) {
           alert("Please verify your email first!");
           return;
-}
-
-        
+        }
 
         const deviceId = getDeviceId();
-const userRef = doc(db, "users", userCredential.user.uid);
-const userSnap = await getDoc(userRef);
+        const userRef = doc(db, "users", userCredential.user.uid);
+        const userSnap = await getDoc(userRef);
 
-if (userSnap.exists()) {
+        if (userSnap.exists()) {
+          if (userSnap.data().deviceId !== deviceId) {
+            const confirmSwitch = confirm(
+              "Account is logged in on another device. Continue here and logout other device?"
+            );
+            if (!confirmSwitch) return;
+            await setDoc(userRef, { deviceId: deviceId });
+          }
+        } else {
+          await setDoc(userRef, { deviceId: deviceId });
+        }
 
-  if (userSnap.data().deviceId !== deviceId) {
-
-    const confirmSwitch = confirm("Account is logged in on another device. Continue here and logout other device?");
-
-    if (!confirmSwitch) return;
-
-    await setDoc(userRef, { deviceId: deviceId });
-  }
-
-} else {
-  await setDoc(userRef, { deviceId: deviceId });
-}
-
-alert("Login successful!");
-window.location.href = "index.html";
-
-
+        alert("Login successful!");
+        window.location.href = "index.html";
       } catch (error) {
         alert(error.message);
       }
-
     });
   }
-
 });
 
+// -------------------- DEVICE ID FUNCTION --------------------
 function getDeviceId() {
   let deviceId = localStorage.getItem("deviceId");
 
@@ -134,6 +133,3 @@ function getDeviceId() {
 
   return deviceId;
 }
-
-
-
